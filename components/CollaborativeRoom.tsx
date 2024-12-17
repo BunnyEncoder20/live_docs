@@ -12,6 +12,7 @@ import { ClientSideSuspense, RoomProvider } from '@liveblocks/react/suspense'
 
 // ui imports 
 import Loader from './Loader';
+import ActiveCollaborators from './ActiveCollaborators';
 
 
 
@@ -24,7 +25,7 @@ const CollaborativeRoom = () => {
         <div className="collaborative-room">
 
 
-          {/* Header */}
+          {/* Header Comp */}
           <Header>
             <div className="flex w-fit items-center justify-center gap-2">
               <p className="document-title">
@@ -32,14 +33,19 @@ const CollaborativeRoom = () => {
               </p>
             </div>
 
-            {/* clerk sign in and sign out */}
-            <SignedOut>
-              <SignInButton />
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
+            <div className="flex w-full flex-1 jsutify-end gap-2 sm:gap-3">
+              {/* collaborators */}
+              <ActiveCollaborators />
 
+
+              {/* clerk sign in and sign out */}
+              <SignedOut>
+                <SignInButton />
+              </SignedOut>
+              <SignedIn>
+                <UserButton />
+              </SignedIn>
+            </div>
           </Header>
 
           {/* Editor */}
