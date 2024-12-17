@@ -1,17 +1,26 @@
 import { Inter as FontSans } from "next/font/google"
 
+// utils import
 import { cn } from "@/lib/utils"
-import './globals.css'
 import { Metadata } from "next"
-import { ClerkProvider } from "@clerk/nextjs"
-import { dark } from "@clerk/themes"
-// import Provider from "./Provider"
+import './globals.css'
 
+// clerk imports
+import { ClerkProvider } from '@clerk/nextjs'
+import { dark } from "@clerk/themes"
+
+// LiveBlocks provider
+import Provider from "./Provider"
+
+
+// next fonts
 const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
 })
 
+
+// Metadata of project
 export const metadata: Metadata = {
   title: 'LiveDocs',
   description: 'Your go-to collaborative editor',
@@ -20,17 +29,19 @@ export const metadata: Metadata = {
   }
 }
 
+
+// Actual layout 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    // <ClerkProvider
-    //   appearance={{
-    //     baseTheme: dark,
-    //     variables: { 
-    //       colorPrimary: "#3371FF" ,
-    //       fontSize: '16px'
-    //     },
-    //   }}
-    // >
+    <ClerkProvider
+      appearance={{
+        baseTheme: dark,
+        variables: { 
+          colorPrimary: "#3371FF" ,
+          fontSize: '16px'
+        },
+      }}
+    >
       <html lang="en" suppressHydrationWarning>
         <body
           className={cn(
@@ -38,11 +49,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             fontSans.variable
           )}
         >
-          {/* <Provider> */}
+          <Provider>
             {children}
-          {/* </Provider> */}
+          </Provider>
         </body>
       </html>
-    // </ClerkProvider>
+    </ClerkProvider>
   )
 }

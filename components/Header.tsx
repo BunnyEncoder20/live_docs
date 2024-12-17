@@ -1,8 +1,9 @@
+// next imports
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { Children } from 'react'
 
-const Header = ({ children }: { HeaderProps }) => {
+
+const Header = ({ children }: HeaderProps) => {
   return (
     <div className="header">
       {/* bigger Logo with name */}
@@ -28,7 +29,7 @@ const Header = ({ children }: { HeaderProps }) => {
       </Link>
 
       {
-        Children
+        children
       }
     </div>
   )
