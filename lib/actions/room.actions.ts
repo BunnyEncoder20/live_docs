@@ -1,4 +1,4 @@
-'user server';
+'use server';
 
 // utils
 import { revalidatePath } from 'next/cache';
@@ -38,7 +38,7 @@ export const createDocument = async ({
     const room = await liveblocks.createRoom(roomId, {
       metadata,
       usersAccesses,
-      defaultAccesses: [],
+      defaultAccesses: ['room:write'],
     });
 
     // revalidate path (so that new document is displayed)
