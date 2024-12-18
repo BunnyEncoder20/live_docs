@@ -26,7 +26,9 @@ import { udpateDocument } from '@/lib/actions/room.actions';
 // Current component ⚛️
 const CollaborativeRoom = ({
   roomId,
-  roomMetadata
+  roomMetadata,
+  users, 
+  currentUserType
 }: CollaborativeRoomProps) => {
 
   // states
@@ -37,9 +39,6 @@ const CollaborativeRoom = ({
   // refs
   const containerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
-
-  // TODO: current user type
-  const currentUserType = 'editor'
 
   // update title handler
   const updateTitleHandler = async (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -163,7 +162,8 @@ const CollaborativeRoom = ({
 
           {/* Editor */}
           <Editor 
-            // roomId={roomId}
+            roomId={roomId}
+            currentUserType={currentUserType}
           />
         </div>
       </ClientSideSuspense>

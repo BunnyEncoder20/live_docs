@@ -54,7 +54,7 @@ export const createDocument = async ({
 
 
 // Server action: Get document
-export const getDocument = async ({ roomId, userId }: { roomId: string, userId: string }) => {
+export const getDocument = async (roomId: string, userId: string ) => {
   
   try {
     // get room
@@ -72,6 +72,21 @@ export const getDocument = async ({ roomId, userId }: { roomId: string, userId: 
     
   } catch (error) {
     console.error("Error in getDocument: ", error);
+  }
+}
+
+// Server action: Get all documents
+export const getAllDocuments = async (email: string) => {
+  
+  try {
+    // get rooms
+    const rooms = await liveblocks.getRooms({ userId: email });
+    // console.log("SERVER ACTION",rooms)
+    // retunr rooms
+    return parseStringify(rooms);
+    
+  } catch (error) {
+    console.error("Error in getAllDocuments: ", error);
   }
 }
 

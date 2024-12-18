@@ -1,5 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
 // ui imports
@@ -10,18 +11,23 @@ import AddDocumentBtn from '@/components/AddDocumentBtn'
 import { SignedIn, UserButton } from '@clerk/nextjs'
 import { currentUser } from '@clerk/nextjs/server'
 
+// Server Actions
+import { getAllDocuments } from '@/lib/actions/room.actions'
+
+// utils import 
+import { dateConverter } from '@/lib/utils'
 
 
 // Home page 📄
 const Home = async () => {
 
-  // get user documents
-  const documents = []
-
   // fetch user info
   const clerkUser = await currentUser();
   if (!clerkUser) redirect('/sign-in');
 
+  // fetch user documents
+  const roomDocuments = await getAllDocuments(clerkUser.emailAddresses[0].emailAddress)
+  
   return (
     <main className="home-container">
 
@@ -39,9 +45,42 @@ const Home = async () => {
 
 
       {/* Documents lists */}
-      {documents.length > 0 ? (
-        <div>
+      {roomDocuments.data.length > 0 ? (
+        <div className='document-list-container'>
+          <div className="document-list-title">
+            <h3 className="text-28-semibold">
+              Your Documents
+            </h3>
 
+            {/* Add documents btn */}
+            <AddDocumentBtn
+              userId={clerkUser.id}
+              email={clerkUser.emailAddresses[0].emailAddress}
+            />
+          </div>
+
+          {/* list */}
+          <ul className="document-ul">
+            {roomDocuments.data.map(({id, metadata, createdAt}: any) => (
+              <li key={id} className="document-list-item">
+                <Link href={`/documents/${id}`} className="flex flex-1 items-center gap-4">
+                  <div className="hidden rounded-md bg-dark-500 p-2 sm:block">
+                    <Image src="/assets/icons/doc.svg" alt="file" height={40} width={40} />
+                  </div>
+                  <div className="space-y-1">
+                    <p className='line-clamp-1 text-lg'>
+                      { metadata.title }
+                    </p>
+                    <p className="text-sm font-light text-blue-100">
+                      Created about: { dateConverter(createdAt) }
+                    </p>
+                  </div>
+                </Link>
+
+                {/* Todo: Add delete button */}
+              </li>
+            ))}
+          </ul>
         </div>
       ) : (
         <div className="document-list-empty">

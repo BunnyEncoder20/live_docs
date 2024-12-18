@@ -6,7 +6,7 @@ import CollaborativeRoom from "@/components/CollaborativeRoom"
 
 // actions imports
 import { getDocument } from "@/lib/actions/room.actions";
-// import { getClerkUsers } from "@/lib/actions/user.actions";
+import { getClerkUsers } from "@/lib/actions/user.actions";
 
 // clerk imports
 import { currentUser } from "@clerk/nextjs/server"
@@ -22,20 +22,31 @@ const Document = async ({
   const clerkUser = await currentUser();
   if (!clerkUser) redirect('/sign-in');
 
+  console.log(clerkUser.emailAddresses[0].emailAddress)
+
   // get room and check access
-  const room = await getDocument({
-    roomId: id,
-    userId: clerkUser.emailAddresses[0].emailAddress,
-  })
+  const room = await getDocument(
+    id,
+    clerkUser.emailAddresses[0].emailAddress,
+  )
   if (!room) redirect('/');
 
-  // Todo access the permissions of the user to access the document (read/edit)
+  // extract user data and assign userType
+  const userIds = Object.keys(room.usersAccesses);
+  const users = await getClerkUsers({ userIds })
+  const usersData = users.map((user: User) => ({
+    ...user,
+    userType: room.usersAccesses[user.email]?.includes('room:write') ? 'editor' : 'viewer'
+  }));
+  const currentUserType = room.usersAccesses[clerkUser.emailAddresses[0].emailAddress]?.includes('room:write') ? 'editor' : 'viewer';
 
   return (
     <main className="flex w-full flex-col items-center">
       <CollaborativeRoom 
         roomId={id}
         roomMetadata={room.metadata}
+        users={usersData}
+        currentUserType={currentUserType}
       />
     </main>
   )
