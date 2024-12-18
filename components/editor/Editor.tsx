@@ -1,45 +1,36 @@
 'use client';
 
-import React from 'react';
-
-// Editor imports
 import Theme from './plugins/Theme';
 import ToolbarPlugin from './plugins/ToolbarPlugin';
 import { HeadingNode } from '@lexical/rich-text';
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
+import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
+import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
+import React from 'react';
 
-// liveblocks plugin
-import { FloatingComposer, FloatingThreads, liveblocksConfig, LiveblocksPlugin, useEditorStatus  } from '@liveblocks/react-lexical'
-import { useSyncStatus } from "@liveblocks/react";
-import { useThreads } from '@liveblocks/react/suspense';
-
-
-// ui imports
+import { FloatingComposer, FloatingThreads, liveblocksConfig, LiveblocksPlugin, useEditorStatus } from '@liveblocks/react-lexical'
 import Loader from '../Loader';
 
-// plugin imports
-import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
-import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
-import FloatingToolbarPlugin from './plugins/FloatingToolbarPlugin';
+import FloatingToolbarPlugin from './plugins/FloatingToolbarPlugin'
+import { useThreads } from '@liveblocks/react/suspense';
+import Comments from '../Comments';
+// import { DeleteModal } from '../DeleteModal';
 
 // Catch any errors that occur during Lexical updates and log them
 // or throw them as needed. If you don't throw them, Lexical will
 // try to recover gracefully without losing user data.
 
 function Placeholder() {
-  return <div className="editor-placeholder">Hello World</div>;
+  return <div className="editor-placeholder">Enter some rich text...</div>;
 }
 
-export function Editor({
-  roomId,
-  currentUserType
-}: {
-  roomId: string,
-  currentUserType: string
-}) {
+export function Editor({ roomId, currentUserType }: { roomId: string, currentUserType: UserType }) {
+  const status = useEditorStatus();
+  const { threads } = useThreads();
+
   const initialConfig = liveblocksConfig({
     namespace: 'Editor',
     nodes: [HeadingNode],
@@ -51,25 +42,17 @@ export function Editor({
     editable: currentUserType === 'editor',
   });
 
-  const status = useEditorStatus();
-  const { threads } = useThreads();
-
   return (
     <LexicalComposer initialConfig={initialConfig}>
       <div className="editor-container size-full">
         <div className="toolbar-wrapper flex min-w-full justify-between">
           <ToolbarPlugin />
-          
-          {/* if editor, show delete modal */}
-          {/* {currentUserType === 'editor' && 
-            <DeleteModal roomId={roomId} />
-          } */}
+          {/* {currentUserType === 'editor' && <DeleteModal roomId={roomId} />} */}
         </div>
 
         <div className="editor-wrapper flex flex-col items-center justify-start">
-          {status === "not-loaded" || status === "loading" ? (
-            <Loader />
-          ) : (
+          {status === 'not-loaded' || status === 'loading' ? 
+            <Loader /> : (
             <div className="editor-inner min-h-[1100px] relative mb-5 h-fit w-full max-w-[800px] shadow-md lg:mb-10">
               <RichTextPlugin
                 contentEditable={
@@ -78,10 +61,7 @@ export function Editor({
                 placeholder={<Placeholder />}
                 ErrorBoundary={LexicalErrorBoundary}
               />
-              {/* liveblocks plugin when current user is editor */}
-              {currentUserType === 'editor' && 
-                <FloatingToolbarPlugin />
-              }
+              {currentUserType === 'editor' && <FloatingToolbarPlugin />}
               <HistoryPlugin />
               <AutoFocusPlugin />
             </div>
@@ -89,11 +69,10 @@ export function Editor({
 
           <LiveblocksPlugin>
             <FloatingComposer className="w-[350px]"/>
-            <FloatingThreads threads={threads} />
+            <FloatingThreads threads={threads}/>
+            <Comments />
           </LiveblocksPlugin>
         </div>
-
-        
       </div>
     </LexicalComposer>
   );

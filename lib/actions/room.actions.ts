@@ -81,8 +81,7 @@ export const getAllDocuments = async (email: string) => {
   try {
     // get rooms
     const rooms = await liveblocks.getRooms({ userId: email });
-    // console.log("SERVER ACTION",rooms)
-    // retunr rooms
+    // return rooms
     return parseStringify(rooms);
     
   } catch (error) {
