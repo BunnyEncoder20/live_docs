@@ -12,7 +12,7 @@ import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 
 // liveblocks plugin
-import { FloatingComposer, FloatingThreads, liveblocksConfig, LiveblocksPlugin } from '@liveblocks/react-lexical'
+import { FloatingComposer, FloatingThreads, liveblocksConfig, LiveblocksPlugin, useEditorStatus  } from '@liveblocks/react-lexical'
 import { useSyncStatus } from "@liveblocks/react";
 import { useThreads } from '@liveblocks/react/suspense';
 
@@ -51,7 +51,7 @@ export function Editor({
     editable: currentUserType === 'editor',
   });
 
-  const syncStatus = useSyncStatus();
+  const status = useEditorStatus();
   const { threads } = useThreads();
 
   return (
@@ -67,7 +67,7 @@ export function Editor({
         </div>
 
         <div className="editor-wrapper flex flex-col items-center justify-start">
-          {syncStatus === "not-loaded" || syncStatus === "loading" ? (
+          {status === "not-loaded" || status === "loading" ? (
             <Loader />
           ) : (
             <div className="editor-inner min-h-[1100px] relative mb-5 h-fit w-full max-w-[800px] shadow-md lg:mb-10">
@@ -89,7 +89,7 @@ export function Editor({
 
           <LiveblocksPlugin>
             <FloatingComposer className="w-[350px]"/>
-            <FloatingThreads />
+            <FloatingThreads threads={threads} />
           </LiveblocksPlugin>
         </div>
 
