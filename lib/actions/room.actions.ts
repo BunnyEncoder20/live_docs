@@ -74,3 +74,26 @@ export const getDocument = async ({ roomId, userId }: { roomId: string, userId: 
     console.error("Error in getDocument: ", error);
   }
 }
+
+
+// Server Action: Update document 
+export const udpateDocument = async (
+  roomId: string,
+  title: string
+) => {
+  try {
+    // update the room metadata uaing liveblocks built in func
+    const updatedRoom = await liveblocks.updateRoom( roomId, {
+      metadata: {
+        title
+      }
+    });
+
+    // redirect to updated room
+    revalidatePath(`/documents/${roomId}`);
+
+    return parseStringify(updatedRoom);
+  } catch (error) {
+    console.error("Error in updateDocument: ", error)
+  }
+}
