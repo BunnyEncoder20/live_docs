@@ -12,7 +12,7 @@ import { liveblocks } from '@/lib/liveblocks';
 
 
 
-// Server action
+// Server actions: Create room (new document)
 export const createDocument = async ({
   userId, 
   email 
@@ -49,5 +49,28 @@ export const createDocument = async ({
 
   } catch (error) {
     console.error("Error while creating a room: ", error)
+  }
+}
+
+
+// Server action: Get document
+export const getDocument = async ({ roomId, userId }: { roomId: string, userId: string }) => {
+  
+  try {
+    // get room
+    const room = await liveblocks.getRoom(roomId);
+  
+    // Todo: add this check back after testing collaborative room
+    // check if user have access to the room
+    // const hasAccess = Object.keys(room.usersAccesses).includes(userId);
+  
+    // if (!hasAccess) {
+    //   throw new Error("You don't have access to this document");
+    // }
+  
+    return parseStringify(room);
+    
+  } catch (error) {
+    console.error("Error in getDocument: ", error);
   }
 }

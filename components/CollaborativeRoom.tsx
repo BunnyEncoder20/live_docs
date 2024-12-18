@@ -18,9 +18,12 @@ import ActiveCollaborators from './ActiveCollaborators';
 
 
 // Current component ⚛️
-const CollaborativeRoom = () => {
+const CollaborativeRoom = ({
+  roomId,
+  roomMetadata
+}: CollaborativeRoomProps) => {
   return (
-    <RoomProvider id="my-room">
+    <RoomProvider id={roomId}>
       <ClientSideSuspense fallback={<Loader />}>
         <div className="collaborative-room">
 
@@ -33,7 +36,7 @@ const CollaborativeRoom = () => {
               </p>
             </div>
 
-            <div className="flex w-full flex-1 jsutify-end gap-2 sm:gap-3">
+            <div className="flex w-full flex-1 justify-end gap-2 sm:gap-3">
               {/* collaborators */}
               <ActiveCollaborators />
 
@@ -49,7 +52,9 @@ const CollaborativeRoom = () => {
           </Header>
 
           {/* Editor */}
-          <Editor />
+          <Editor 
+            // roomId={roomId}
+          />
         </div>
       </ClientSideSuspense>
     </RoomProvider>
