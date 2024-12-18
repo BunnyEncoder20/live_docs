@@ -1,5 +1,6 @@
 'use server';
 
+import { liveblocks } from "../liveblocks";
 // utils imports
 import { parseStringify } from "../utils";
 
@@ -30,5 +31,35 @@ export const getClerkUsers = async ({ userIds }: { userIds: string[] }) => {
 
   } catch (error) {
     console.error("Error while fetching users", error);
+  }
+}
+
+export const getDocumentUsers = async ({
+  roomId,
+  currentUser,
+  text,
+}: {
+  roomId: string,
+  currentUser: string,
+  text: string,
+}) => {
+  try {
+    // fetch room
+    const room = await liveblocks.getRoom(roomId);
+
+    // get room users except ourselfs
+    const users = Object.keys(room.usersAccesses).filter((email) => email !== currentUser);
+
+    // filter users by what name user is typing
+    if (text.length) {
+      const lowerCaseText = text.toLowerCase();
+      const filteredUsers = users.filter((email: string) => email.toLowerCase().includes(lowerCaseText));
+      return parseStringify(filteredUsers);
+    }
+
+    // else just return all names 
+    return parseStringify(users)
+  } catch (error) {
+    console.error("Error in getDocumentUsers: ", error);
   }
 }
