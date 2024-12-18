@@ -20,6 +20,7 @@ import { Input } from './ui/input';
 
 // Server actions imports
 import { udpateDocument } from '@/lib/actions/room.actions';
+import ShareModal from './ShareModal';
 
 
 
@@ -149,7 +150,15 @@ const CollaborativeRoom = ({
               {/* collaborators */}
               <ActiveCollaborators />
 
+              {/* share modal */}
+              <ShareModal
+                roomId={roomId}
+                collaborators={users}
+                creatorId={roomMetadata.creatorId}
+                currentUserType={currentUserType}
+              />
 
+              
               {/* clerk sign in and sign out */}
               <SignedOut>
                 <SignInButton />

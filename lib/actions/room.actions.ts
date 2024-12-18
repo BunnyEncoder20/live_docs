@@ -2,7 +2,7 @@
 
 // utils
 import { revalidatePath } from 'next/cache';
-import { parseStringify } from '../utils';
+import { getAccessType, parseStringify } from '../utils';
 
 // nanoid for unique if gen
 import { nanoid } from 'nanoid';
@@ -109,5 +109,62 @@ export const udpateDocument = async (
     return parseStringify(updatedRoom);
   } catch (error) {
     console.error("Error in updateDocument: ", error)
+  }
+}
+
+
+// Server action: update document access 
+export const updateDocumentAccess = async ({
+  roomId,
+  email,
+  userType,
+  updatedBy,
+}: ShareDocumentParams) => {
+  try {
+    const usersAccesses: RoomAccesses = {
+      [email]: getAccessType(userType) as AccessType,
+    }
+
+    // udpate the room
+    const room = await liveblocks.updateRoom(roomId, {
+      usersAccesses,
+    });
+    if (room) {
+      // Todo: send notification to invited user
+    }
+
+    revalidatePath(`/documents/${roomId}`);
+    return parseStringify(room);
+  } catch (error) {
+    console.error("Error in updateDocumentAccess: ", error)
+  }
+}
+
+
+// Server action: remove a collab from document
+export const removeCollaborator = async ({
+  roomId,
+  email
+}: {
+  roomId: string,
+  email: string,
+}) => {
+  try {
+    const room = await liveblocks.getRoom(roomId);
+    if (room.metadata.email === email) {
+      // if owner, we cannot remove you
+      throw new Error("You cannot remove the owner (yourself) from the document");
+    }
+
+    const updateRoom = await liveblocks.updateRoom(roomId, {
+      usersAccesses: {
+        [email]: null
+      }
+    });
+
+    revalidatePath(`/documents/${roomId}`);
+    return parseStringify(updateRoom);
+  } catch (error) {
+    console.log("Error in removeCollaborator: ", error)
   }
 }
