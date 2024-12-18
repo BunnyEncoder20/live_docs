@@ -38,7 +38,7 @@ export const createDocument = async ({
     const room = await liveblocks.createRoom(roomId, {
       metadata,
       usersAccesses,
-      defaultAccesses: ['room:write'],
+      defaultAccesses: [],
     });
 
     // revalidate path (so that new document is displayed)
@@ -60,13 +60,12 @@ export const getDocument = async (roomId: string, userId: string ) => {
     // get room
     const room = await liveblocks.getRoom(roomId);
   
-    // Todo: add this check back after testing collaborative room
     // check if user have access to the room
-    // const hasAccess = Object.keys(room.usersAccesses).includes(userId);
+    const hasAccess = Object.keys(room.usersAccesses).includes(userId);
   
-    // if (!hasAccess) {
-    //   throw new Error("You don't have access to this document");
-    // }
+    if (!hasAccess) {
+      throw new Error("You don't have access to this document");
+    }
   
     return parseStringify(room);
     

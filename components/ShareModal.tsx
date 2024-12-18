@@ -22,6 +22,7 @@ import { Input } from './ui/input'
 // component imports
 import UserTypeSelector from './UserTypeSelector'
 import Collaborator from './Collaborator'
+import { updateDocumentAccess } from '@/lib/actions/room.actions'
 
 
 
@@ -44,11 +45,16 @@ const ShareModal = ({
 
   // const share document handler
   const shareDocumentHandler = async () => {
-    try {
+    setLoading(true)
 
-    } catch (error) {
+    await updateDocumentAccess({
+      roomId,
+      email,
+      userType: userType as UserType,
+      updatedBy: user.info
+    });
 
-    }
+    setLoading(false);
   }
 
   return (
