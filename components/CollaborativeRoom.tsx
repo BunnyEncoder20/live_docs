@@ -18,6 +18,8 @@ import Loader from './Loader';
 import ActiveCollaborators from './ActiveCollaborators';
 import { Input } from './ui/input';
 
+// Server actions imports
+import { udpateDocument } from '@/lib/actions/room.actions';
 
 
 
@@ -40,27 +42,33 @@ const CollaborativeRoom = ({
   const currentUserType = 'editor'
 
   // update title handler
-  const updateTitleHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const updateTitleHandler = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       setLoading(true);
 
       try {
         if (documentTitle !== roomMetadata.title) {
-          // Todo: update title
+          const updatedDocument = await udpateDocument(roomId, documentTitle);
+
+          if ( updatedDocument ) {
+            setEditing(false);
+          }
         }
       } catch (error) {
         console.error("Error in Updating title: ", error)
       } finally {
         setLoading(false);
       }
+    }
   }
 
-  // use Effect 
+  // use Effects 
   useEffect(() => {
 
     // when click outside, listen for that mouse event after we have a conatiner ref (after editing title)
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)){
+        udpateDocument(roomId, documentTitle)
         setEditing(false)
       }
     }
@@ -70,7 +78,14 @@ const CollaborativeRoom = ({
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     }
-  }, [])
+  }, [roomId, documentTitle]);
+
+  useEffect(() => {
+    // focus on input  when editing title
+    if (editing && inputRef.current) {
+      inputRef.current?.focus();
+    }
+  },[editing]);
   
 
   return (
