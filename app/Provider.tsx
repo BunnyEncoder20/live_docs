@@ -21,25 +21,29 @@ const Provider = ({ children }: { children: React.ReactNode }) => {
   return (
     <LiveblocksProvider 
       authEndpoint="/api/liveblocks-auth"
+
+      // users of document (room) resolver
       resolveUsers={async ({ userIds }) => {
-        const users = await getClerkUsers({ userIds });
-        return users
+        const users = await getClerkUsers({ userIds});
+
+        return users;
       }}
+
+      // @ mentions users resolver
       resolveMentionSuggestions={async ({ text, roomId }) => {
-        const roomUsers = await getDocumentUsers({ roomId, 
-          currentUser: clerkUser?.emailAddresses[0].emailAddress!, 
-          text 
-        });
+        const roomUsers = await getDocumentUsers({
+          roomId,
+          currentUser: clerkUser?.emailAddresses[0].emailAddress!,
+          text,
+        })
 
         return roomUsers;
       }}
     >
-
       <ClientSideSuspense fallback={<Loader />}>
         {children}
       </ClientSideSuspense>
-
-  </LiveblocksProvider>
+    </LiveblocksProvider>
   )
 }
 

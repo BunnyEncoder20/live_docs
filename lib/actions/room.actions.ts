@@ -125,10 +125,11 @@ export const updateDocumentAccess = async ({
       [email]: getAccessType(userType) as AccessType,
     }
 
-    // udpate the room
-    const room = await liveblocks.updateRoom(roomId, {
-      usersAccesses,
+    // update room
+    const room = await liveblocks.updateRoom(roomId, { 
+      usersAccesses
     });
+
     if (room) {
       // Todo: send notification to invited user
     }

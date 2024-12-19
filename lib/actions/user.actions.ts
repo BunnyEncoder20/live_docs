@@ -9,14 +9,12 @@ import { clerkClient } from "@clerk/nextjs/server";
 
 
 // Server action
-export const getClerkUsers = async ({ userIds }: { userIds: string[] }) => {
+export const getClerkUsers = async ({ userIds }: { userIds: string[]}) => {
   try {
-    // fetch all users clerk info
     const { data } = await clerkClient.users.getUserList({
-      emailAddress: userIds
+      emailAddress: userIds,
     });
 
-    // convert it into users map
     const users = data.map((user) => ({
       id: user.id,
       name: `${user.firstName} ${user.lastName}`,
@@ -24,13 +22,11 @@ export const getClerkUsers = async ({ userIds }: { userIds: string[] }) => {
       avatar: user.imageUrl,
     }));
 
-    // sort the users by userId
     const sortedUsers = userIds.map((email) => users.find((user) => user.email === email));
 
     return parseStringify(sortedUsers);
-
   } catch (error) {
-    console.error("Error while fetching users", error);
+    console.log(`Error fetching users: ${error}`);
   }
 }
 
