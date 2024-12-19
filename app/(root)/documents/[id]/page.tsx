@@ -34,7 +34,7 @@ const Document = async ({
   const userIds = Object.keys(room.usersAccesses);
   const users = await getClerkUsers({ userIds });
 
-  console.log("EMAIL:",)
+
   const usersData = users.map((user: User) => ({
     ...user,
     userType: room.usersAccesses[user.email]?.includes('room:write')
