@@ -18,7 +18,7 @@ const UserTypeSelector = ({
 
   const accessChangeHandler = (type: UserType) => {
     setUserType(type);
-    onClickHandler && onClickHandler(userType);
+    onClickHandler && onClickHandler(type);
   }
 
   return (
