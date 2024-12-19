@@ -16,6 +16,7 @@ import { getAllDocuments } from '@/lib/actions/room.actions'
 
 // utils import 
 import { dateConverter } from '@/lib/utils'
+import DeleteModal from '@/components/DeleteModal'
 
 
 // Home page 📄
@@ -78,6 +79,7 @@ const Home = async () => {
                 </Link>
 
                 {/* Todo: Add delete button */}
+                <DeleteModal roomId={id} />
               </li>
             ))}
           </ul>

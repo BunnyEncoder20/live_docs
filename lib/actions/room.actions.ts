@@ -2,6 +2,7 @@
 
 // utils
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 import { getAccessType, parseStringify } from '../utils';
 
 // nanoid for unique if gen
@@ -165,5 +166,17 @@ export const removeCollaborator = async ({
     return parseStringify(updateRoom);
   } catch (error) {
     console.log("Error in removeCollaborator: ", error)
+  }
+}
+
+
+// Server action: Delete document
+export const deleteDocument = async (roomId: string) => {
+  try {
+    await liveblocks.deleteRoom(roomId);
+    revalidatePath('/');
+    redirect('/');
+  } catch (error) {
+    console.log("Error in deleteDocument: ", error)
   }
 }
