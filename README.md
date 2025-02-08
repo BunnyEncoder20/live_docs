@@ -37,3 +37,13 @@
 - **Responsive:** The application is responsive across all devices.
 
 and many more, including code architecture and reusability
+
+---
+
+## Project Screenshots
+
+![](./public/project_ss/1.png)
+![](./public/project_ss/2.png)
+![](./public/project_ss/5.png)
+![](./public/project_ss/3.png)
+![](./public/project_ss/4.png)
